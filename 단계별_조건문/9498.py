@@ -1,3 +1,4 @@
+# 시험 성적
 n = int(input())
 if n >= 90:
     print('A')
