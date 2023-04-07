@@ -1,4 +1,4 @@
-# 빠른 A + B
+# 빠른 A+B
 import sys
 input = sys.stdin.readline
 
