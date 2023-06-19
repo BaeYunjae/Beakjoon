@@ -1,5 +1,5 @@
 # 듣보잡
-# sys.stdin.readline()은 input()뒤에 개행문자를 넣는다. ex) 3 -> 3\n
+# sys.stdin.readline()은 여러 줄의 입력을 받을 때 사용, 한 줄 뒤에 개행문자를 넣는다. ex) 3 -> 3\n
 
 # 첫번째 풀이 (44932KB, 76ms)
 import sys
