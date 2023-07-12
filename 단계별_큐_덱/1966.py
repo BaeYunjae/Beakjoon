@@ -1,5 +1,5 @@
 # 프린트 큐
-# 첫번째 풀이 (34104KB,	80ms)
+# 첫번째 풀이 (34104KB, 80ms)
 from collections import deque
 
 T = int(input())
