@@ -23,12 +23,12 @@ int bs(long long start, long long end)
 {
 	long long mid = 0;
 
-	while (start <= end)
+	while (start < end)
 	{
-		mid = (start + end) / 2;
+		mid = (start + end + 1) / 2;
 
 		if (isPossible(mid)) {
-			start = mid + 1;
+			start = mid;
 		}
 		else {
 			end = mid - 1;
