@@ -14,16 +14,14 @@ struct Node {
 int n, v, e;
 int a, b;
 int mems[101];
+int dist[2][1001]; // 0: KIST, 1: 씨알푸드
 vector<Node> vect[1001];
 
-int ans = 0;
-
-int dijkstra(int num) {
+void dijkstra(int num, int place) {
 	priority_queue<Node> pq;
 
-	int dist[1001];
-	for (int i = 1; i <= v; i++) dist[i] = 1e9;
-	dist[num] = 0;
+	for (int i = 1; i <= v; i++) dist[place][i] = 1e9;
+	dist[place][num] = 0;
 
 	pq.push({ num, 0 });
 
@@ -35,20 +33,12 @@ int dijkstra(int num) {
 			Node next = vect[now.num][i];
 
 			int nextCost = now.cost + next.cost;
-			if (dist[next.num] <= nextCost) continue;
+			if (dist[place][next.num] <= nextCost) continue;
 
-			dist[next.num] = nextCost;
+			dist[place][next.num] = nextCost;
 			pq.push({ next.num, nextCost });
 		}
 	}
-	
-	int toKIST = dist[a];
-	int toFood = dist[b];
-
-	if (toKIST == 1e9 || toFood == 1e9) ans = -1;
-	else ans += toKIST + toFood;
-
-	return ans;
 }
 
 int main() {
@@ -70,8 +60,22 @@ int main() {
 		vect[to].push_back({ from, cost });
 	}
 
+	// 목적지에서 가는 것과 출발지에서 가는 것은 동일
+	dijkstra(a, 0);
+	dijkstra(b, 1);
+
+	int ans = 0;
 	for (int i = 0; i < n; i++) {
-		dijkstra(mems[i]);
+		for (int j = 0; j < 2; j++) {
+			if (dist[j][mems[i]] == 1e9) {
+				ans = -1;
+				cout << ans;
+				return 0;
+			}
+			else {
+				ans += dist[j][mems[i]];
+			}
+		}
 	}
 
 	cout << ans;
