@@ -15,16 +15,6 @@ struct Taxi {
 	int nowY, nowX, fuel;
 };
 
-bool compare(User const a, User const b) {
-	if (a.distToDest == b.distToDest) {
-		if (a.startY == b.startY) {
-			return a.startX < b.startX;
-		}
-		return a.startY < b.startY;
-	}
-	return a.distToDest < b.distToDest;
-}
-
 int n, m, initFuel;
 int map[21][21];
 Taxi taxi;
