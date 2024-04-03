@@ -10,6 +10,7 @@ struct Node {
 
 struct Switch {
 	int y, x;
+	bool on = false;
 };
 
 string map[16];
@@ -41,11 +42,9 @@ void input() {
 		for (int j = 0; j < n; j++) {
 			if (map[i][j] == 'Z') {
 				zoms.push_back({ i, j, 0 });
-				visited[i][j] = 2;
 			}
 			if (map[i][j] == 'S') {
 				lights.push_back({ i, j });
-				visited[i][j] = 3;
 			}
 		}
 	}
@@ -59,8 +58,6 @@ void start(int sy, int sx, int d, char now) {
 
 		Ari.y = ny;
 		Ari.x = nx;
-		visited[sy][sx] = 0;
-		visited[ny][nx] = 1;
 
 	}
 	else if (now == 'R') {
@@ -75,12 +72,15 @@ void start(int sy, int sx, int d, char now) {
 	// 불 켤 수 있는지 확인
 	for (int i = 0; i < lights.size(); i++) {
 		Switch s = lights[i];
+		if (s.on) continue;
 		if (s.y != Ari.y || s.x != Ari.x) continue;
 		lightMap[s.y][s.x] = 1;
+		lights[i].on = true;
 		for (int d = 0; d < 8; d++) {
 			int ny = s.y + lightDir[d][0];
 			int nx = s.x + lightDir[d][1];
 			if (ny < 0 || ny >= n || nx < 0 || nx >= n) continue;
+			if (lightMap[ny][nx] == 1) continue;
 
 			lightMap[ny][nx] = 1;
 		}
@@ -131,9 +131,7 @@ int main() {
 				zoms[i].dir ^= 1;
 				continue;
 			}
-			visited[z.y][z.x] = 0;
 			zoms[i].y = next;
-			visited[zoms[i].y][zoms[i].x] = 2;
 		}
 
 		// 좀비와 같이 있는데 불이 켜져있는지 꺼져있는지 확인
