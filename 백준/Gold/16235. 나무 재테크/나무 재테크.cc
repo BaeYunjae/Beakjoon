@@ -1,109 +1,101 @@
 #include <iostream>
-#include <queue>
 #include <vector>
 #include <algorithm>
 using namespace std;
 
-// r, c = 1부터 시작
-
-struct Tree {
-	int age, r, c;
-	bool alive;
-};
+// 나무 지도
+vector<int> tree[11][11];
 
 int n, m, k;
-int map[12][12];
-int A[12][12];
-deque<int> trees[12][12];
-vector<pair<int, int>> spread;
-vector<pair<pair<int, int>, int>> dead;
+// 양분 지도
+int nutr[11][11];
+// 추가 양분 배열
+int	A[11][11];
 
-int cntTree = 0;
+// 죽은 나무 개수
+// vector의 pop_back은 맨뒤 제거
+int die_tree;
+// 해당 위치에서 죽은 나무들의 추가 양분들의 합
+int die_nutr;
 
 int dr[8] = { -1, 1, 0, 0, -1, 1, 1, -1 };
 int dc[8] = { 0, 0, -1, 1, 1, 1, -1, -1 };
 
 void input() {
 	cin >> n >> m >> k;
-	
+
+	// 추가 양분 배열
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) {
 			cin >> A[i][j];
 		}
 	}
 
+	// 심은 나무
 	for (int i = 0; i < m; i++) {
 		int r, c, age;
 		cin >> r >> c >> age;
-		cntTree++;
-		trees[r][c].push_back(age);
+		tree[r][c].push_back(age);
 	}
 }
 
-void init() {
-	// 초기에 양분이 5만큼 들어있음
+void initNutr() {
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) {
-			map[i][j] = 5;
+			nutr[i][j] = 5;
 		}
 	}
 }
 
-void spring() {
-
-	spread.clear();
-	dead.clear();
-
+void spring_summer() {
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) {
-			if (trees[i][j].size() == 0) continue;
+			if (tree[i][j].size() == 0) continue;
 
-			int treeNum = trees[i][j].size();
+			die_tree = 0;
+			die_nutr = 0;
 
-			while (treeNum--){
-				int nowAge = trees[i][j].front();
-				trees[i][j].pop_front();
-				
-				if (map[i][j] >= nowAge) {
-					map[i][j] -= nowAge;
-					trees[i][j].push_back(nowAge + 1);
+			sort(tree[i][j].begin(), tree[i][j].end());
 
-					if ((nowAge + 1) % 5 == 0) {
-						spread.push_back({ i, j });
-					}
+			for (int k = 0; k < tree[i][j].size(); k++) {
+				if (nutr[i][j] >= tree[i][j][k]) {
+					nutr[i][j] -= tree[i][j][k];
+					tree[i][j][k]++;
 				}
 				else {
-					cntTree--;
-					dead.push_back({ {i, j}, nowAge });
+					die_tree++;
+					die_nutr += tree[i][j][k] / 2;
 				}
 			}
+
+			// vector는 뒤에서부터 pop
+			for (int k = 0; k < die_tree; k++) {
+				tree[i][j].pop_back();
+			}
+			
+			// 죽은 나무의 양분 추가
+			nutr[i][j] += die_nutr;
 		}
-	}
-}
-
-void summer() {
-	for (int i = 0; i < dead.size(); i++) {
-		int nowR = dead[i].first.first;
-		int nowC = dead[i].first.second;
-		int nowAge = dead[i].second;
-
-		map[nowR][nowC] += nowAge / 2;
 	}
 }
 
 void fall() {
-	for (int i = 0; i < spread.size(); i++) {
-		int nowR = spread[i].first;
-		int nowC = spread[i].second;
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			if (tree[i][j].size() == 0) continue;
+			
+			for (int k = 0; k < tree[i][j].size(); k++) {
+				if (tree[i][j][k] % 5 == 0) {
+					for (int d = 0; d < 8; d++) {
+						int nr = i + dr[d];
+						int nc = j + dc[d];
 
-		for (int d = 0; d < 8; d++) {
-			int nextR = nowR + dr[d];
-			int nextC = nowC + dc[d];
+						if (nr < 1 || nr > n || nc < 1 || nc > n) continue;
 
-			if (nextR < 1 || nextR > n || nextC < 1 || nextC > n) continue;
-
-			cntTree++;
-			trees[nextR][nextC].push_front(1);
+						tree[nr][nc].push_back(1);
+					}
+				}
+			}
 		}
 	}
 }
@@ -111,7 +103,7 @@ void fall() {
 void winter() {
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) {
-			map[i][j] += A[i][j];
+			nutr[i][j] += A[i][j];
 		}
 	}
 }
@@ -122,15 +114,20 @@ int main() {
 	cout.tie(0);
 
 	input();
-	init();
+	initNutr();
 
 	while (k--) {
-		spring();
-		if (cntTree == 0) break;
-		summer();
+		spring_summer();
 		fall();
 		winter();
 	}
 
-	cout << cntTree;
+	int live_tree = 0;
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			if (tree[i][j].size() != 0) live_tree += tree[i][j].size();
+		}
+	}
+
+	cout << live_tree;
 }
