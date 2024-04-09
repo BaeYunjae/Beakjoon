@@ -13,7 +13,6 @@ GuSeol start;
 
 int dy[4] = { -1, 1, 0, 0 };
 int dx[4] = { 0, 0, -1, 1 };
-int visited[11][11][11][11];
 
 void input() {
 	cin >> n >> m;
@@ -40,6 +39,7 @@ void input() {
 
 int bfs() {
 	int ret = -1;
+	int visited[10][10][10][10] = { 0 };
 
 	queue<GuSeol> q;
 	q.push({ start });
