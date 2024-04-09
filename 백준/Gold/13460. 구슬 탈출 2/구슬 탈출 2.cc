@@ -28,7 +28,7 @@ void input() {
 				start.ry = i;
 				start.rx = j;
 			}
-			else if (map[i][j] == 'B'){
+			else if (map[i][j] == 'B') {
 				start.by = i;
 				start.bx = j;
 			}
@@ -42,14 +42,14 @@ int bfs() {
 	int ret = -1;
 
 	queue<GuSeol> q;
-	q.push({start});
+	q.push({ start });
 
 	visited[start.ry][start.rx][start.by][start.bx] = 1;
 
 	while (!q.empty()) {
 		GuSeol now = q.front();
 		q.pop();
-	
+
 		if (now.cnt > 10) break;
 		if (map[now.ry][now.rx] == 'O' && map[now.by][now.bx] != 'O') {
 			ret = now.cnt;
@@ -62,6 +62,8 @@ int bfs() {
 			int nextBY = now.by;
 			int nextBX = now.bx;
 
+			int redDist = 0;
+			int blueDist = 0;
 			// 빨간공 굴리기
 			while (1) {
 				if (map[nextRY][nextRX] != '#' && map[nextRY][nextRX] != 'O') {
@@ -76,6 +78,7 @@ int bfs() {
 					}
 					break;
 				}
+				redDist++;
 			}
 
 			// 파란공 굴리기
@@ -92,15 +95,13 @@ int bfs() {
 					}
 					break;
 				}
+				blueDist++;
 			}
 
 			// 빨간 공과 파란 공의 도달 위치가 같다면
 			if (nextRY == nextBY && nextRX == nextBX) {
 				// 구멍에 들어가는 경우는 위에서 처리를 해줬다
 				if (map[nextRY][nextRX] != 'O') {
-					int redDist = abs(nextRY - now.ry) + abs(nextRX - now.rx);
-					int blueDist = abs(nextBY - now.by) + abs(nextBX - now.bx);
-
 					// 거리가 더 먼 구슬이 늦게 도달한 것
 					if (redDist > blueDist) {
 						nextRY -= dy[i];
