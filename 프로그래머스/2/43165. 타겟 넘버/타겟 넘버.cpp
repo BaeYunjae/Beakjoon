@@ -3,22 +3,25 @@
 
 using namespace std;
 
-int answer = 0;
+int total;
 
-void dfs(int level, vector<int> numbers, int target, int now){
-    if (level == numbers.size()){
-        if (now == target) answer++;
+void DFS(vector<int> &numbers, int &target,int sum,int n) {
+    if(n >= numbers.size()){
+        if(sum == target) total++;
         return;
     }
-    
-    
-    dfs(level + 1, numbers, target, now + numbers[level]);
-    dfs(level + 1, numbers, target, now - numbers[level]);
+
+    DFS(numbers, target, sum + numbers[n], n+1);
+    DFS(numbers, target, sum - numbers[n], n+1);
 }
 
 int solution(vector<int> numbers, int target) {
-    
-    dfs(0, numbers, target, 0);
-    
+    int answer = 0;
+
+    DFS(numbers, target, numbers[0] , 1);
+    DFS(numbers, target, -numbers[0], 1);
+
+    answer = total;
+
     return answer;
 }
