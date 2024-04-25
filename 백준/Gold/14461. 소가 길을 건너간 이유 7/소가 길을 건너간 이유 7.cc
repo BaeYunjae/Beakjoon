@@ -1,5 +1,6 @@
 #include <iostream>
 #include <queue>
+#include <algorithm>
 using namespace std;
 
 struct Node {
@@ -28,7 +29,8 @@ void input() {
 	}
 }
 
-void dijkstra() {
+int dijkstra() {
+	int ans = 21e8;
 	priority_queue<Node> pq;
 
 	for (int i = 0; i < 3; i++) {
@@ -45,6 +47,10 @@ void dijkstra() {
 	while (!pq.empty()) {
 		Node now = pq.top();
 		pq.pop();
+
+		if (now.y == n - 1 && now.x == n - 1) {
+			ans = min(ans, now.nowTime);
+		}
 
 		for (int i = 0; i < 4; i++) {
 			int ny = now.y + dir[i][0];
@@ -63,6 +69,8 @@ void dijkstra() {
 			pq.push({ ny, nx, nextCnt, nextTime });
 		}
 	}
+
+	return ans;
 }
 
 int main() {
@@ -72,14 +80,5 @@ int main() {
 
 	input();
 
-	dijkstra();
-
-	int ans = 21e8;
-	for (int i = 0; i < 3; i++) {
-		if (ans > visited[i][n - 1][n - 1]) {
-			ans = visited[i][n - 1][n - 1];
-		}
-	}
-
-	cout << ans;
+	cout << dijkstra();
 }
