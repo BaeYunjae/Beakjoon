@@ -1,6 +1,7 @@
 #include <iostream>
-#include <map>
 using namespace std;
+
+int DAT[10001] = { 0 };
 
 int main() {
 	ios_base::sync_with_stdio(false);
@@ -11,16 +12,13 @@ int main() {
 	cin >> n;
 
 	int num;
-	map<int, int> m;
-
 	while (n--) {
 		cin >> num;
-		m[num]++;
+		DAT[num]++;
 	}
 
-	for (auto now : m) {
-		for (int i = 0; i < now.second; i++) {
-			cout << now.first << "\n";
-		}
+	for (int i = 1; i < 10001; i++) {
+		if (DAT[i] == 0) continue;
+		while (DAT[i]--) cout << i << "\n";
 	}
 }
