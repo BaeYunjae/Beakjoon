@@ -1,6 +1,5 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
+#include <queue>
 using namespace std;
 
 int main() {
@@ -11,62 +10,38 @@ int main() {
 	int n, m, b;
 	cin >> n >> m >> b;
 
-	int lowest = 21e8;
-	int highest = 0;
-	vector<int> vect;
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			int num;
-			cin >> num;
-			vect.push_back(num);
-			lowest = min(lowest, num);
-			highest = max(highest, num);
-		}
+	int arr[257] = { 0 };
+	for (int i = 0; i < n * m; i++) {
+		int num;
+		cin >> num;
+		arr[num]++;
 	}
 
-	sort(vect.begin(), vect.end(), greater<>());
-
-
-	int minTime = 21e8;
-	int maxHeight = 0;
-
-	for (int tar = lowest; tar <= highest; tar++) {
-		int nowTime = 0;
-		int tb = b;
-		int flag = 0;
-		for (int v = 0; v < vect.size(); v++) {
-			if (vect[v] == tar) continue;
-
-			int nowHeight = vect[v];
-
-			// 현재 높이가 더 작을 때
-			if (nowHeight < tar) {
-				int temp = tar - nowHeight;
-				if (tb - temp < 0) {
-					flag = 1;
-					break;
-				}
-				tb -= temp;
-				nowTime += temp;
-			}
-
-			// 현재 높이가 더 클 때
-			else if (nowHeight > tar) {
-				int temp = nowHeight - tar;
-				tb += temp;
-				nowTime += temp * 2;
-			}
-
-			int de = -1;
+	// 투포인터
+	int front = 0, back = 256, nowTime = 0;
+	while (front != back) {
+		if (arr[front] == 0) {
+			front++;
+			continue;
 		}
 
-		if (flag == 1) continue;
+		if (arr[back] == 0) {
+			back--;
+			continue;
+		}
 
-		if (nowTime <= minTime) {
-			minTime = nowTime;
-			maxHeight = max(maxHeight, tar);
+		int de = -1;
+
+		if (arr[front] > b || arr[front] > arr[back] * 2) {
+			b += arr[back];
+			arr[back - 1] += arr[back];
+			nowTime += arr[back--] * 2;
+		}
+		else {
+			b -= arr[front];
+			arr[front + 1] += arr[front];
+			nowTime += arr[front++];
 		}
 	}
-
-	cout << minTime << " " << maxHeight;
+	cout << nowTime << " " << front;
 }
