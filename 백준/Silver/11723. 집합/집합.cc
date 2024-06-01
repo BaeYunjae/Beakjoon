@@ -1,41 +1,6 @@
 #include <iostream>
-#include <vector>
 #include <string>
 using namespace std;
-
-vector<int> set;
-
-void add(int x) {
-	for (int i = 0; i < set.size(); i++) {
-		if (set[i] == x) return;
-	}
-	set.push_back(x);
-}
-
-void remove(int x) {
-	for (int i = 0; i < set.size(); i++) {
-		if (set[i] == x) {
-			set.erase(set.begin()+i);
-		}
-	}
-}
-
-int check(int x) {
-	for (int i = 0; i < set.size(); i++) {
-		if (set[i] == x) return 1;
-	}
-	return 0;
-}
-
-void toggle(int x) {
-	for (int i = 0; i < set.size(); i++) {
-		if (set[i] == x) {
-			set.erase(set.begin() + i);
-			return;
-		}
-	}
-	set.push_back(x);
-} 
 
 int main() {
 	ios_base::sync_with_stdio(false);
@@ -44,32 +9,38 @@ int main() {
 	int m;
 	cin >> m;
 
+	int DAT[21] = { 0 };
+
 	while (m--) {
 		string cmd;
-		int x;
 		cin >> cmd;
 
-		if (cmd == "all") {
-			vector<int> tmp;
-			for (int i = 1; i <= 20; i++) tmp.push_back(i);
-			set = tmp;
-		}
-		else if (cmd == "empty") set.clear();
-		else if (cmd == "add") {
+		int x;
+		if (cmd == "add") {
 			cin >> x;
-			add(x);
+			if (DAT[x] == 0) DAT[x] = 1;
 		}
 		else if (cmd == "remove") {
 			cin >> x;
-			remove(x);
+			if (DAT[x] == 1) DAT[x] = 0;
 		}
 		else if (cmd == "check") {
-			cin >> x; 
-			cout << check(x) << "\n";
+			cin >> x;
+			cout << DAT[x] << "\n";
 		}
 		else if (cmd == "toggle") {
 			cin >> x;
-			toggle(x);
+			DAT[x] ^= 1;
+		}
+		else if (cmd == "all") {
+			for (int i = 1; i <= 20; i++) {
+				DAT[i] = 1;
+			}
+		}
+		else if (cmd == "empty") {
+			for (int i = 1; i <= 20; i++) {
+				DAT[i] = 0;
+			}
 		}
 	}
 }
