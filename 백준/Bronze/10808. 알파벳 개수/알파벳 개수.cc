@@ -2,6 +2,8 @@
 #include <string>
 using namespace std;
 
+int arr[26]; // 전역에 
+
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(0); cout.tie(0);
@@ -9,15 +11,11 @@ int main() {
 	string s;
 	cin >> s;
 
-	int alpha[130] = { 0 };
+	for (auto ch : s)
+		arr[ch - 'a']++;
 
-	for (int i = 0; i < s.length(); i++) {
-		alpha[s[i]]++;
-	}
-
-	for (int i = 'a'; i <= 'z'; i++) {
-		cout << alpha[i] << " ";
-	}
+	for (int i = 0; i < 26; i++)
+		cout << arr[i] << " ";
 
 	return 0;
 }
