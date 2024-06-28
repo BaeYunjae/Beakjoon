@@ -1,48 +1,10 @@
 #include <iostream>
-#include <queue>
+#include <algorithm>
 using namespace std;
 
-struct Node {
-	int num, cnt;
-};
-
+// 1. 테이블 만들기
+int DP[1000001];
 int n;
-int visited[1000001];
-int dist[1000001];
-
-void dijkstra(int x) {
-	queue<Node> q;
-	q.push({ x, 0 });
-
-	for (int i = 0; i <= n; i++) dist[i] = 1e9;
-	dist[x] = 0;
-
-	while (!q.empty()) {
-		Node now = q.front();
-		q.pop();
-
-		if (now.num % 3 == 0) {
-			int next = now.num / 3;
-			if (dist[next] > now.cnt + 1) {
-				dist[next] = now.cnt + 1;
-				q.push({ next, now.cnt + 1 });
-			}
-		}
-
-		if (now.num % 2 == 0) {
-			int next = now.num / 2;
-			if (dist[next] > now.cnt + 1) {
-				dist[next] = now.cnt + 1;
-				q.push({ next, now.cnt + 1 });
-			}
-		}
-
-		if (dist[now.num - 1] > now.cnt + 1) {
-			dist[now.num - 1] = now.cnt + 1;
-			q.push({ now.num - 1, now.cnt + 1 });
-		}
-	}
-}
 
 int main() {
 	ios_base::sync_with_stdio(false);
@@ -50,7 +12,17 @@ int main() {
 
 	cin >> n;
 
-	dijkstra(n);
+	// 2. 점화식 찾기 
+	// 3. 초기값 정의하기
+	DP[1] = 0;
 
-	cout << dist[1];
+	for (int i = 2; i <= n; i++) {
+		DP[i] = DP[i - 1] + 1;
+		if (i % 3 == 0) DP[i] = min(DP[i], DP[i / 3] + 1);
+		if (i % 2 == 0) DP[i] = min(DP[i], DP[i / 2] + 1);
+	}
+
+	cout << DP[n];
+
+	return 0;
 }
