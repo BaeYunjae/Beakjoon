@@ -1,6 +1,7 @@
 #include <iostream>
-#include <map>
+#include <vector>
 #include <string>
+#include <algorithm>
 using namespace std;
 
 int main() {
@@ -10,28 +11,31 @@ int main() {
 	int n, m;
 	cin >> n >> m;
 
-	map<string, int> names;
+	vector<string> call;
+	vector<string> result;
 
 	string name;
-	while (n--) {
+	for (int i = 0; i < n; i++) {
 		cin >> name;
-
-		names[name]++;
+		call.push_back(name);
 	}
 
-	int num = 0;
+	sort(call.begin(), call.end());
 
-	while (m--) {
+	for (int i = 0; i < m; i++) {
 		cin >> name;
-
-		names[name]++;
-		if (names[name] == 2) num++;
+		if (binary_search(call.begin(), call.end(), name)) {
+			result.push_back(name);
+		}
 	}
 
-	cout << num << "\n";
+	sort(result.begin(), result.end());
 
-	for (auto it : names) {
-		if (it.second == 2) cout << it.first << "\n";
+	cout << result.size() << "\n";
+
+	for (int i = 0; i < result.size(); i++) {
+		cout << result[i] << "\n";
 	}
 
+	return 0;
 }
