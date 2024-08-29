@@ -1,22 +1,5 @@
-// 1. 테이블 정의하기
-// 2. 점화식 구하기
-// 3. 초기값 정하기
-
-/*
-1 -> 2 / 3
-2 <- 1 / 0
-3 <- (1x) 2 / 1 <- 0 / 0
-4 <- (2x) 3 / 2 <- 1 / 1
-5 <- (3x) 4 / 3 <- 2 / 2
-
-*/
-
 #include <iostream>
-#include <algorithm>
 using namespace std;
-
-int stairs[301];
-int dp[301];
 
 int main() {
 	ios_base::sync_with_stdio(false);
@@ -25,18 +8,24 @@ int main() {
 	int n;
 	cin >> n;
 
-	for (int i = 1; i <= n; i++) {
+	int dp[300][2];  // [][0] : 연속되지 않은 경우, [][1] : 연속된 경우
+	int stairs[300];
+
+	for (int i = 0; i < n; i++) {
 		cin >> stairs[i];
 	}
 
-	dp[1] = stairs[1];
-	dp[2] = dp[1] + stairs[2];
-	dp[3] = max(stairs[2] + stairs[3], dp[1] + stairs[3]);
+	dp[0][0] = stairs[0];
+	dp[0][1] = 0;
+	dp[1][0] = stairs[1];
+	dp[1][1] = stairs[0] + stairs[1];
 
-	for (int i = 4; i <= n; i++) {
-		dp[i] = max(dp[i - 3] + stairs[i - 1], dp[i - 2]) + stairs[i];
+	for (int i = 2; i < n; i++) {
+		// 연속되지 않은 경우, 전전단계에서 온 경우
+		dp[i][0] = max(dp[i - 2][0], dp[i - 2][1]) + stairs[i];
+		// 연속된 경우, 무조건 연속되지 않은 경우에서 와야 함
+		dp[i][1] = dp[i - 1][0] + stairs[i];
 	}
 
-	cout << dp[n];
+	cout << max(dp[n - 1][0], dp[n - 1][1]);
 }
-
