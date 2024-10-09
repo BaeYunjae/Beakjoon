@@ -1,81 +1,48 @@
 #include <string>
 #include <vector>
-#include <unordered_set>
-#include <algorithm>
+#include <queue>
 
 using namespace std;
 
-unordered_set<string> us;
-
-int len;
-int n;
 int visited[51];
-int minVal = 1e9;
 
-void dfs(string tar, string now, vector<string> words, int idx, int num){
-    if (words[idx] == tar){
-        minVal = min(minVal, num);
-        printf("num: %d \n", num);
-        return;
-    }
+int possible(string a, string b){
+    int cnt = 0;
     
-    for (int i = 0; i < n; i++){
-        if (visited[i]) continue;
-        
-        bool flag = false;
-        for (int j = 0; j < len; j++){
-            if (now[j] != words[i][j]){
-                if (!flag) flag = true;
-                else {
-                    flag = false;
-                    break;
-                }
-            }
-        }
-        if (flag) {
-            visited[i] = 1;
-            printf("%s ", words[i].c_str());
-            dfs(tar, words[i], words, i, num + 1);
-            visited[i] = 0;
-        }
+    for (int i = 0; i < a.length(); i++){
+        if (a[i] != b[i]) cnt++;
+        if (cnt > 1) return 0;
     }
+    return 1;
 }
 
 int solution(string begin, string target, vector<string> words) {
     int answer = 0;
-
-    for (string str: words){
-        us.insert(str);
-    }
+    queue<pair<string, int>> q;
     
-    // 2. words에 target이 없으면 0 return 
-    if (us.find(target) == us.end()){
-        return 0;
-    }
+    string temp;
+    int num;
     
-    // 1. dfs
-    len = begin.size();
-    n = words.size();
-    
-    for (int i = 0; i < n; i++){
-        bool flag = false;
-        for (int j = 0; j < len; j++){
-            if (begin[j] != words[i][j]){
-                if (!flag) flag = true;
-                else {
-                    flag = false;
-                    break;
-                }
+    q.push(make_pair(begin, 0));
+    while(!q.empty()){
+        temp = q.front().first;
+        num = q.front().second;
+        q.pop();
+        
+        if (temp.compare(target) == 0){
+            answer = num;
+            break;
+        }
+        
+        for (int i = 0; i < words.size(); i++){
+            if (visited[i]) continue;
+            
+            if (possible(temp, words[i])){
+                visited[i] = 1;
+                q.push(make_pair(words[i], num + 1));
             }
         }
-        if (flag) {
-            visited[i] = 1;
-            dfs(target, words[i], words, i, 1);
-        }
-        printf("\n");
     }
-    
-    answer = minVal;
     
     return answer;
 }
