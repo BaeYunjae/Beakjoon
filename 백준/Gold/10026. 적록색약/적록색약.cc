@@ -1,6 +1,7 @@
 #include <iostream>
 #include <queue>
 #include <string>
+#include <cstring>
 using namespace std;
 
 struct Node {
@@ -77,11 +78,7 @@ int main() {
     }
 
     // 방문여부 초기화
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            visited[i][j] = 0;
-        }
-    }
+    memset(visited, 0, sizeof(visited));
 
     // 적록색약 그리드에 대해 BFS 수행
     for (int i = 0; i < n; i++) {
