@@ -17,9 +17,9 @@ int main() {
 	}
 
 	// 마지막에서 바로 윗줄부터 dp에 저장
-	for (int i = n - 2; i >= 0; i--) {
-		for (int j = n - 2; j >= 0; j--) {
-			dp[i][j] = max(dp[i + 1][j], dp[i + 1][j + 1]) + dp[i][j];
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j <= n - i; j++) {
+			dp[n - i - 1][j] += max(dp[n - i][j], dp[n - i][j + 1]);
 		}
 	}
 
