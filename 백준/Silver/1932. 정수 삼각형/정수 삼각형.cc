@@ -1,9 +1,8 @@
 #include <iostream>
-#include <vector>
 using namespace std;
 
 int n;
-vector<int> tri[501];
+int tri[501][501];
 long long dp[501][501];
 
 int main() {
@@ -14,10 +13,7 @@ int main() {
 
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j <= i; j++) {
-			int input;
-			cin >> input;
-
-			tri[i].push_back(input);
+			cin >> tri[i][j];
 		}
 	}
 
@@ -28,7 +24,7 @@ int main() {
 
 	// 마지막에서 바로 윗줄부터 dp에 저장
 	for (int i = n - 2; i >= 0; i--) {
-		for (int j = 0; j < tri[i].size(); j++) {
+		for (int j = 0; j < n; j++) {
 			dp[i][j] = max(dp[i + 1][j], dp[i + 1][j + 1]) + tri[i][j];
 		}
 	}
