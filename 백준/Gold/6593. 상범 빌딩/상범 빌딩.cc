@@ -1,5 +1,3 @@
-// 정육면체, 3차원 -> 동서남북상하, 대각선 이동 불가
-// 최대 60초 
 #include <iostream>
 #include <queue>
 #include <cstring>
@@ -40,10 +38,8 @@ int bfs(int sl, int sr, int sc) {
 			if (nl < 0 || nl >= L || nr < 0 || nr >= R || nc < 0 || nc >= C) continue;
 			if (building[nl][nr][nc] == '#' || visited[nl][nr][nc]) continue;
 
-			int nextTime = now.nowTime + 1;
-
 			visited[nl][nr][nc] = true;
-			q.push({ nl, nr, nc, nextTime });
+			q.push({ nl, nr, nc, now.nowTime + 1 });
 		}
 	}
 
