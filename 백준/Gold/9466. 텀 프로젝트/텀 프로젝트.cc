@@ -1,34 +1,34 @@
 #include <iostream>
-#include <vector>
+#include <queue>
 #include <cstring>
 using namespace std;
 
 int arr[100001];
-bool visited[100001];
-bool done[100001];
+int chosen[100001];
 
-int teamSize;
+int bfs(int n) {
+	int cnt = 0;
+	queue<int> q;
 
-void dfs(int now) {
-	// 현재 노드 방문 처리
-	visited[now] = true;
-	int next = arr[now];
-
-	if (!visited[next]) {
-		// 아직 방문하지 않은 노드면 DFS 진행
-		dfs(next);
-	}
-	else if (!done[next]) {
-		int cur = next;
-		while (1) {
-			teamSize++;
-			if (cur == now) break; // 사이클 끝날 때까지 순회
-			cur = arr[cur];
+	// 선택받은 학생 넣기
+	for (int i = 1; i <= n; i++) {
+		if (!chosen[i]) {
+			q.push(i);
 		}
 	}
 
-	// 탐색 완료 
-	done[now] = true;
+	while (!q.empty()) {
+		cnt++;
+		int next = arr[q.front()];
+		q.pop();
+
+		chosen[next]--;
+		if (!chosen[next]) {
+			q.push(next);
+		}
+	}
+
+	return cnt;
 }
 
 int main() {
@@ -42,24 +42,14 @@ int main() {
 		int N;
 		cin >> N;
 
-		memset(done, false, sizeof(done));
-		memset(visited, false, sizeof(visited));
+		memset(chosen, 0, sizeof(chosen));
 
-		int teamCnt = 0;
-
-		// 입력 
+		// 입력
 		for (int i = 1; i <= N; i++) {
 			cin >> arr[i];
+			chosen[arr[i]]++;
 		}
 
-		for (int i = 1; i <= N; i++) {
-			if (visited[i]) continue;
-
-			teamSize = 0;
-			dfs(i);
-			teamCnt += teamSize;
-		}
-
-		cout << N - teamCnt << "\n";
+		cout << bfs(N) << "\n";
 	}
 }
